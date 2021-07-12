@@ -53,16 +53,19 @@ mkdir -p mediastack/torrents/{music,photos,movies,tv}
 mkdir -p mediastack/usenet/{music,photos,movies,tv}
 
 # Change Ownership
-sudo chown -R administrator.administrator data
-sudo chown -R administrator.administrator torrents
-sudo chown -R administrator.administrator usenet
+    sudo chown -R administrator.administrator data
+    sudo chown -R administrator.administrator torrents
+    sudo chown -R administrator.administrator usenet
 
 # Change Permissions
-chmod -R 775 data
-chmod -R 775 torrents
-chmod -R 775 usenet
+    chmod -R 775 data
+    chmod -R 775 torrents
+    chmod -R 775 usenet
+
+# Confirm Ownership and Permissions
+    ls -lh
 
 # Reboot
 
 # Check Mappings, we should see our 4 mappings from fstab
-df -h 
+    df -h 
