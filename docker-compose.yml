@@ -40,7 +40,7 @@ services:
       - PUID=${PUID} # default user id, defined in .env # User ID to run as
       - PGID=${PGID} # default group id, defined in .env # Group ID to run as
     volumes:
-      - ${ROOT}/data:/data # Location of all your media
+      - ${ROOT}/media:/media # Location of all your media
       - ${ROOT}/config/sonarr:/config # config files
       - ${ROOT}/downloads:/downloads # download folder
     ports:
@@ -55,7 +55,7 @@ services:
       - PUID=${PUID} # default user id, defined in .env # User ID to run as
       - PGID=${PGID} # default group id, defined in .env # Group ID to run as
     volumes:
-      - ${ROOT}/data:/data # Location of all your media
+      - ${ROOT}/media:/media # Location of all your media
       - ${ROOT}/config/radarr:/config # config files
       - ${ROOT}/downloads:/downloads # download folder
     ports:
@@ -71,7 +71,7 @@ services:
       - PUID=${PUID} # default user id, defined in .env # User ID to run as
       - PGID=${PGID} # default group id, defined in .env # Group ID to run as
     volumes:
-      - ${ROOT}/data:/data # Location of all your media
+      - ${ROOT}/media:/media # Location of all your media
       - ${ROOT}/config/bazarr:/config # config files
     ports:
       - 6767:6767/tcp # Allows HTTP access to the internal webserver.
@@ -87,27 +87,27 @@ services:
       - ${ROOT}/config/prowlarr:/config
     ports:
       - 9696:9696
-  ombi:
-    image: linuxserver/ombi
-    container_name: ombi
-    restart: unless-stopped
-    environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
-      - TZ=${TZ} # timezone, defined in .env
-    volumes:
-      - ${ROOT}/config/ombi:/config
-    ports:
-      - 3579:3579
-  tautulli:
-    image: linuxserver/tautulli
-    container_name: tautulli
-    restart: unless-stopped
-    environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
-      - TZ=${TZ} # timezone, defined in .env
-    volumes:
-      - ${ROOT}/config/tautulli:/config
-    ports:
-      - 8181:8181
+#   ombi:
+#     image: linuxserver/ombi
+#     container_name: ombi
+#     restart: unless-stopped
+#     environment:
+#       - PUID=${PUID} # default user id, defined in .env
+#       - PGID=${PGID} # default group id, defined in .env
+#       - TZ=${TZ} # timezone, defined in .env
+#     volumes:
+#       - ${ROOT}/config/ombi:/config
+#     ports:
+#       - 3579:3579
+#   tautulli:
+#     image: linuxserver/tautulli
+#     container_name: tautulli
+#     restart: unless-stopped
+#     environment:
+#       - PUID=${PUID} # default user id, defined in .env
+#       - PGID=${PGID} # default group id, defined in .env
+#       - TZ=${TZ} # timezone, defined in .env
+#     volumes:
+#       - ${ROOT}/config/tautulli:/config
+#     ports:
+#       - 8181:8181
