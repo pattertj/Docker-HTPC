@@ -1,10 +1,12 @@
----
 version: "2"
 services:
   expressvpn:
     container_name: expressvpn
-    image: polkaned/expressvpn
+    image: polkaned/expressvpn:latest
     environment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
       - ACTIVATION_CODE=${VPN_CODE}
     cap_add:
       - NET_ADMIN
@@ -16,23 +18,25 @@ services:
     privileged: true
     restart: unless-stopped
     ports:
-      - 8112:8112 # ports of other containers that use the vpn (to access them locally)
-  deluge:
-    container_name: deluge
-    image: linuxserver/deluge:latest
-    restart: always
+      - 8080:8080 # ports of other containers that use the vpn (to access them locally)
+      
+  qbittorrent:
+    container_name: qbittorrent
+    image: linuxserver/qbittorrent:latest
+    restart: unless-stopped
     network_mode: service:expressvpn # run on the vpn network
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
     volumes:
-      - ${ROOT}/downloads:/downloads # downloads folder
-      - ${ROOT}/config/deluge:/config # config files
+      - ${ROOT}/torrents:/downloads # downloads folder
+      - ${ROOT}/config/qbittorrent:/config # config files
     depends_on:
       - expressvpn
+      
   sonarr:
-    image: linuxserver/sonarr
+    image: linuxserver/sonarr:latest
     container_name: sonarr
     restart: unless-stopped
     environment:
@@ -42,11 +46,11 @@ services:
     volumes:
       - ${ROOT}/media:/media # Location of all your media
       - ${ROOT}/config/sonarr:/config # config files
-      - ${ROOT}/downloads:/downloads # download folder
     ports:
       - 8989:8989/tcp # Web UI
+      
   radarr:
-    image: linuxserver/radarr
+    image: linuxserver/radarr:latest
     container_name: radarr
     restart: unless-stopped
     environment:
@@ -57,12 +61,11 @@ services:
     volumes:
       - ${ROOT}/media:/media # Location of all your media
       - ${ROOT}/config/radarr:/config # config files
-      - ${ROOT}/downloads:/downloads # download folder
     ports:
       - 7878:7878/tcp # The port for the Radarr webinterface
 
   bazarr:
-    image: linuxserver/bazarr
+    image: linuxserver/bazarr:latest
     container_name: bazarr
     restart: unless-stopped
     environment:
@@ -75,8 +78,9 @@ services:
       - ${ROOT}/config/bazarr:/config # config files
     ports:
       - 6767:6767/tcp # Allows HTTP access to the internal webserver.
+
   prowlarr:
-    image: linuxserver/prowlarr:nightly-version-0.1.0.624
+    image: linuxserver/prowlarr:develop
     container_name: prowlarr
     restart: unless-stopped
     environment:
