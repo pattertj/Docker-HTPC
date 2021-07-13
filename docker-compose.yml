@@ -18,12 +18,12 @@ services:
     privileged: true
     restart: unless-stopped
     ports:
-      - 8080:8080 # ports of other containers that use the vpn (to access them locally)
-      
-  qbittorrent:
-    container_name: qbittorrent
-    image: linuxserver/qbittorrent:latest
-    restart: unless-stopped
+      - 8080:8080 # QBittorrent
+      - 8112:8112 # Deluge
+
+  deluge:
+    image: ghcr.io/linuxserver/deluge
+    container_name: deluge
     network_mode: service:expressvpn # run on the vpn network
     environment:
       - PUID=${PUID} # default user id, defined in .env
@@ -31,7 +31,8 @@ services:
       - TZ=${TZ} # timezone, defined in .env
     volumes:
       - ${ROOT}/torrents:/downloads # downloads folder
-      - ${ROOT}/config/qbittorrent:/config # config files
+      - ${ROOT}/config/deluge:/config # config files
+    restart: unless-stopped
     depends_on:
       - expressvpn
       
@@ -44,7 +45,7 @@ services:
       - PUID=${PUID} # default user id, defined in .env # User ID to run as
       - PGID=${PGID} # default group id, defined in .env # Group ID to run as
     volumes:
-      - ${ROOT}/media:/media # Location of all your media
+      - ${ROOT}:/mediastack # Location of all your media
       - ${ROOT}/config/sonarr:/config # config files
     ports:
       - 8989:8989/tcp # Web UI
@@ -59,7 +60,7 @@ services:
       - PUID=${PUID} # default user id, defined in .env # User ID to run as
       - PGID=${PGID} # default group id, defined in .env # Group ID to run as
     volumes:
-      - ${ROOT}/media:/media # Location of all your media
+      - ${ROOT}:/mediastack # Location of all your media
       - ${ROOT}/config/radarr:/config # config files
     ports:
       - 7878:7878/tcp # The port for the Radarr webinterface
